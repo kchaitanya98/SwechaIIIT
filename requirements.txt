@@ -6,3 +6,4 @@ seaborn
 pandas 
 transformers 
 torch
+google-generativeai

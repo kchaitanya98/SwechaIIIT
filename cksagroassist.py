@@ -47,7 +47,7 @@ st.markdown("Interact with your intelligent agriculture assistant powered by Hug
 
 # Embed the chatbot using iframe
 chat_url = "https://hf.co/chat/assistant/684d3d8bd0429a815fad8079"
-components.iframe(chat_url, height=800, scrolling=True)
+# components.iframe(chat_url, height=800, scrolling=True)
 
 
 st.markdown("Not Working ? check in below..")
@@ -71,3 +71,38 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+import google.generativeai as genai
+# Configure Gemini API
+genai.configure(api_key="AIzaSyDZrth20KN9SUxZvu6Gb6YjgNseLADZg1k")
+model = genai.GenerativeModel("gemini-2.0-flash")
+
+# Define allowed topics
+ALLOWED_TOPICS = ["agriculture", "farming", "crop", "soil", "irrigation", "pesticide",
+                  "medicine", "health", "disease", "treatment", "drug", "vaccine", "diagnosis"]
+
+def is_relevant(query):
+    return any(topic in query.lower() for topic in ALLOWED_TOPICS)
+
+# Streamlit UI
+st.title("🌿 Gemini Assistant: Agriculture & Medicine")
+
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+user_input = st.text_input("Ask about agriculture or medicine:")
+
+if user_input:
+    if is_relevant(user_input):
+        st.session_state.history.append(("You", user_input))
+        with st.spinner("Thinking..."):
+            response = model.generate_content(user_input)
+            reply = response.text
+            st.session_state.history.append(("Gemini", reply))
+    else:
+        st.warning("Please ask something related to agriculture or medicine.")
+
+# Display chat
+for speaker, msg in st.session_state.history:
+    st.markdown(f"**{speaker}**: {msg}")
