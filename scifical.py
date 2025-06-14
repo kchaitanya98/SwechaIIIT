@@ -56,6 +56,10 @@ import streamlit as st
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+
 
 st.set_page_config(page_title="🛸 Advanced Sci-Fi Calculator", page_icon="🧪")
 
@@ -254,3 +258,43 @@ elif mode == "Plot Logarithmic Graphs":
 # Footer
 st.markdown("---")
 st.caption("🛸 Powered by NumPy, Matplotlib, Streamlit, and Quantum Circuits v4.2")
+
+
+
+
+
+
+# Upload data
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.subheader("Preview of Dataset")
+    st.dataframe(df.head())
+
+    st.subheader("Basic Statistics")
+    st.write(df.describe())
+
+    # Select columns for plotting
+    numeric_columns = df.select_dtypes(include=['float64', 'int64']).columns.tolist()
+    plot_type = st.selectbox("Select plot type", ["Histogram", "Line Chart", "Scatter Plot"])
+
+    if plot_type == "Histogram":
+        column = st.selectbox("Select column for histogram", numeric_columns)
+        bins = st.slider("Number of bins", 5, 50, 20)
+        fig, ax = plt.subplots()
+        sns.histplot(df[column], bins=bins, kde=True, ax=ax)
+        st.pyplot(fig)
+
+    elif plot_type == "Line Chart":
+        column = st.selectbox("Select column for line chart", numeric_columns)
+        st.line_chart(df[column])
+
+    elif plot_type == "Scatter Plot":
+        col_x = st.selectbox("X-axis", numeric_columns)
+        col_y = st.selectbox("Y-axis", numeric_columns)
+        fig, ax = plt.subplots()
+        sns.scatterplot(data=df, x=col_x, y=col_y, ax=ax)
+        st.pyplot(fig)
+else:
+    st.info("👈 Upload a CSV file to get started.")
