@@ -48,3 +48,26 @@ st.markdown("Interact with your intelligent agriculture assistant powered by Hug
 # Embed the chatbot using iframe
 chat_url = "https://hf.co/chat/assistant/684d3d8bd0429a815fad8079"
 components.iframe(chat_url, height=800, scrolling=True)
+
+
+st.markdown("Not Working ? check in below..")
+
+st.markdown(
+    f"""
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="{chat_url}" target="_blank">
+            <button style="
+                background-color: #228B22;
+                color: white;
+                padding: 14px 30px;
+                font-size: 18px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;">
+                🌿 Launch AgriChat Assistant
+            </button>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
